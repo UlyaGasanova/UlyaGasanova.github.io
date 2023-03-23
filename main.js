@@ -1,18 +1,58 @@
-// пропишем функцию random
-const random = (min, max) => {
-	const rand = min + Math.random() * (max - min + 1);
-	return Math.floor(rand);
+const hamb = document.querySelector("#hamb");
+const popup = document.querySelector("#popup");
+const menu = document.querySelector("#menu").cloneNode(1);
+const body = document.body;
+const links = Array.from(menu.children);
+const anchors = document.querySelectorAll('a[href*="#"]');
+const openPopUp = document.getElementById('pop_up_open');
+const closePopUp = document.getElementById('pop_up_close');
+const popUp = document.getElementById('pop_up');
+
+hamb.addEventListener("click", hambHandler);
+
+function hambHandler(e) {
+	e.preventDefault();
+	popup.classList.toggle("open");
+	hamb.classList.toggle("active");
+	body.classList.toggle("noscroll");
+	renderPopup();
+}
+function renderPopup() {
+	popup.appendChild(menu);
 }
 
-// найдем кнопку
-const btn = document.querySelector('#btn');
-// повесим обработчик событий
-btn.addEventListener('mouseenter', () => {
-	btn.style.left = `${random(0, 90)}%`;
-	btn.style.top = `${random(0, 90)}%`;
+links.forEach((link) => {
+	link.addEventListener("click", closeOnClick);
 });
 
-// в случае победы выведем:
-btn.addEventListener('click', () => {
-	alert('Congrats! You hit the button! What are you doing with your life? :D');
+
+function closeOnClick() {
+	popup.classList.remove("open");
+	hamb.classList.remove("active");
+	body.classList.remove("noscroll");
+}
+
+for (let anchor of anchors) {
+	anchor.addEventListener("click", function (e) {
+		e.preventDefault();
+		const blockID = anchor.getAttribute('href')
+		document.querySelector('' + blockID).scrollIntoView({
+			behavior: "smooth",
+			block: "start"
+
+		})
+	})
+}
+
+openPopUp.addEventListener('click', (e) => {
+	e.preventDefault();
+	popUp.classList.add('active');
+	body.classList.toggle("noscroll");
 });
+
+closePopUp.addEventListener('click', () => {
+	popUp.classList.remove('active');
+	body.classList.remove("noscroll");
+
+});
+
